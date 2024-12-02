@@ -1,13 +1,18 @@
 package com.Saq.fashionZShop.service.product;
 
+import com.Saq.fashionZShop.dto.ImageDto;
+import com.Saq.fashionZShop.dto.ProductDto;
 import com.Saq.fashionZShop.exceptions.ProductNotFoundException;
 import com.Saq.fashionZShop.model.Category;
+import com.Saq.fashionZShop.model.Image;
 import com.Saq.fashionZShop.model.Product;
 import com.Saq.fashionZShop.repository.CategoryRepository;
+import com.Saq.fashionZShop.repository.ImageRepository;
 import com.Saq.fashionZShop.repository.ProductRepository;
 import com.Saq.fashionZShop.request.AddProductRequest;
 import com.Saq.fashionZShop.request.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +24,8 @@ public class ProductService implements IProductService{
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -115,5 +122,21 @@ public class ProductService implements IProductService{
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProduct(List<Product> products){
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImages(imageDtos);
+        return productDto;
     }
 }

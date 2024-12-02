@@ -1,5 +1,6 @@
 package com.Saq.fashionZShop.controller;
 
+import com.Saq.fashionZShop.dto.ProductDto;
 import com.Saq.fashionZShop.exceptions.ProductNotFoundException;
 import com.Saq.fashionZShop.exceptions.ResourceNotFoundException;
 import com.Saq.fashionZShop.model.Product;
@@ -26,7 +27,8 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts(){
         List<Product> products = productService.getAllProduct();
-        return ResponseEntity.ok(new ApiResponse("Success", products));
+        List<ProductDto> productDtos = productService.getConvertedProduct(products);
+        return ResponseEntity.ok(new ApiResponse("Success", productDtos));
     }
 
     @GetMapping("product/{id}/product")

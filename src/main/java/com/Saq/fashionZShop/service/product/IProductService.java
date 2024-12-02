@@ -1,5 +1,6 @@
 package com.Saq.fashionZShop.service.product;
 
+import com.Saq.fashionZShop.dto.ProductDto;
 import com.Saq.fashionZShop.model.Product;
 import com.Saq.fashionZShop.request.AddProductRequest;
 import com.Saq.fashionZShop.request.UpdateProductRequest;
@@ -18,4 +19,8 @@ public interface IProductService {
     List<Product> getProductByName(String name);
     List<Product> getProductByBrandAndName(String brand, String name);
     Long countProductsByBrandAndName(String brand, String name);
+
+    List<ProductDto> getConvertedProduct(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }
