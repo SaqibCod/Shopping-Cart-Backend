@@ -2,12 +2,12 @@ package com.Saq.fashionZShop.service.cart;
 
 import com.Saq.fashionZShop.exceptions.ResourceNotFoundException;
 import com.Saq.fashionZShop.model.Cart;
-import com.Saq.fashionZShop.model.CartItem;
 import com.Saq.fashionZShop.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.Saq.fashionZShop.repository.CartRepository;
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +15,7 @@ public class CartService implements ICartService{
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     @Override
     public Cart getCart(Long id) {
@@ -42,6 +42,14 @@ public class CartService implements ICartService{
 //                .map(CartItem::getTotalPrice)
 //                .reduce(BigDecimal.ZERO,BigDecimal::add);
         return cart.getTotalAmount();
+    }
+
+    @Override
+    public Long initializeNewCart(){
+        Cart newCart = new Cart();
+        Long newCartId = cartIdGenerator.incrementAndGet();
+        newCart.setId(newCartId);
+        return cartRepository.save(newCart).getId();
     }
 }
 
