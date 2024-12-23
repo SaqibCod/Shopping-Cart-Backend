@@ -3,6 +3,7 @@ package com.Saq.fashionZShop.service.cart;
 import com.Saq.fashionZShop.exceptions.ResourceNotFoundException;
 import com.Saq.fashionZShop.model.Cart;
 import com.Saq.fashionZShop.repository.CartItemRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.Saq.fashionZShop.repository.CartRepository;
@@ -26,6 +27,7 @@ public class CartService implements ICartService{
         return cartRepository.save(cart);
     }
 
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart = getCart(id);
@@ -51,6 +53,13 @@ public class CartService implements ICartService{
         newCart.setId(newCartId);
         return cartRepository.save(newCart).getId();
     }
+
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
+    }
+
+
 }
 
 
