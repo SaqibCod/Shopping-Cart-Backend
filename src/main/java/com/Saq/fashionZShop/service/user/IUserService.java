@@ -1,5 +1,6 @@
 package com.Saq.fashionZShop.service.user;
 
+import com.Saq.fashionZShop.dto.UserDto;
 import com.Saq.fashionZShop.model.User;
 import com.Saq.fashionZShop.request.CreateUserRequest;
 import com.Saq.fashionZShop.request.UserUpdateRequest;
@@ -12,4 +13,5 @@ public interface IUserService {
     void deleteUser(Long userId);
 
 
+    UserDto ConvertUserToDto(User user);
 }

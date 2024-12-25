@@ -1,5 +1,6 @@
 package com.Saq.fashionZShop.service.user;
 
+import com.Saq.fashionZShop.dto.UserDto;
 import com.Saq.fashionZShop.exceptions.AlreadyExistsExecption;
 import com.Saq.fashionZShop.exceptions.ResourceNotFoundException;
 import com.Saq.fashionZShop.model.User;
@@ -7,6 +8,7 @@ import com.Saq.fashionZShop.repository.UserRepository;
 import com.Saq.fashionZShop.request.CreateUserRequest;
 import com.Saq.fashionZShop.request.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements IUserService{
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
@@ -49,5 +52,10 @@ public class UserService implements IUserService{
         userRepository.findById(userId).ifPresentOrElse(userRepository :: delete,() -> {
             throw new ResourceNotFoundException("User not found!");
         });
+    }
+
+    @Override
+    public UserDto ConvertUserToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
     }
 }

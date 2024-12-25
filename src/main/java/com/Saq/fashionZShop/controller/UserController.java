@@ -1,5 +1,6 @@
 package com.Saq.fashionZShop.controller;
 
+import com.Saq.fashionZShop.dto.UserDto;
 import com.Saq.fashionZShop.exceptions.AlreadyExistsExecption;
 import com.Saq.fashionZShop.exceptions.ResourceNotFoundException;
 import com.Saq.fashionZShop.model.User;
@@ -24,7 +25,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> getUserById(@PathVariable Long id) {
         try {
             User user = userService.getUserById(id);
-            return ResponseEntity.ok(new ApiResponse("Success!", user));
+            UserDto userDto = userService.ConvertUserToDto(user);
+            return ResponseEntity.ok(new ApiResponse("Success!", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -34,7 +36,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request) {
         try {
             User user = userService.createUser(request);
-            return ResponseEntity.ok(new ApiResponse("Create User Success!", user));
+            UserDto userDto = userService.ConvertUserToDto(user);
+            return ResponseEntity.ok(new ApiResponse("Create User Success!", userDto));
         } catch (AlreadyExistsExecption e) {
             return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
         }
@@ -44,7 +47,8 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@RequestBody UserUpdateRequest request, Long userId) {
         try {
             User user = userService.updateUser(request, userId);
-            return ResponseEntity.ok(new ApiResponse("Success!", userId));
+            UserDto userDto = userService.ConvertUserToDto(user);
+            return ResponseEntity.ok(new ApiResponse("Success!", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
