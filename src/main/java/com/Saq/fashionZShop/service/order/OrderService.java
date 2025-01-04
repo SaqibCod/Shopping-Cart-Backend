@@ -2,7 +2,6 @@ package com.Saq.fashionZShop.service.order;
 
 import com.Saq.fashionZShop.dto.OrderDto;
 import com.Saq.fashionZShop.enums.OrderStatus;
-import com.Saq.fashionZShop.exceptions.ProductNotFoundException;
 import com.Saq.fashionZShop.exceptions.ResourceNotFoundException;
 import com.Saq.fashionZShop.model.Cart;
 import com.Saq.fashionZShop.model.Order;
@@ -87,7 +86,8 @@ public class OrderService implements IOrderService{
                 .toList();
     }
 
-    private OrderDto convertToDto(Order order){
+    @Override
+    public OrderDto convertToDto(Order order){
         return modelMapper.map(order, OrderDto.class);
     }
 
