@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
@@ -27,11 +28,11 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority).toList();
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .subject(userPrincipal.getEmail())
                 .claim("id", userPrincipal.getId())
                 .claim("roles", roles)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + expirationTime))
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + expirationTime))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -42,19 +43,19 @@ public class JwtUtils {
 
     public String getUsernameFromToken(String token) {
        return Jwts.parser()
-                .setSigningKey(key())
+                .verifyWith((SecretKey) key())
                 .build()
-                .parseClaimsJws(token)
-                .getBody()
+                .parseSignedClaims(token)
+                .getPayload()
                .getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(key())
+                    .verifyWith((SecretKey) key())
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return true;
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
                  io.jsonwebtoken.security.SecurityException | IllegalArgumentException e) {
