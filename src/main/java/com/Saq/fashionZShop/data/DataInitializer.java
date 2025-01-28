@@ -3,6 +3,7 @@ package com.Saq.fashionZShop.data;
 import com.Saq.fashionZShop.model.Role;
 import com.Saq.fashionZShop.model.User;
 import com.Saq.fashionZShop.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Transactional
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements ApplicationListener<ApplicationReadyEvent> {
@@ -20,9 +22,9 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Set<String> defaultRoles = Set.of("ROLE_ADMIN", "ROLE_USER");
-        //createDefaultUserIfNotExists();
+        createDefaultUserIfNotExists();
         createDefaultRoleIfNotExists(defaultRoles);
-        //createDefaultIAdminfNotExists();
+        createDefaultIAdminfNotExists();
 
     }
 
